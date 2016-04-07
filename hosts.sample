@@ -1,0 +1,5 @@
+[nas]
+<IP-or-hostname-of-NAS>
+
+[nas:vars]
+remote_user=<existing-deploy-user-on-NAS>

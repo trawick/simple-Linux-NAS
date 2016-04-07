@@ -1,0 +1,69 @@
+---
+
+- name: Configure the NAS
+  hosts: nas
+  remote_user: "{{ remote_user }}"
+  sudo: yes
+
+  tasks:
+    - name: Update apt cache
+      apt: update_cache=yes
+
+    - name: Make sure python-software-properties is installed
+      apt: pkg=python-software-properties state=latest
+
+    - name: Add ppa repo for recent Netatalk
+      apt_repository: repo='ppa:gercod/netatalk'
+      register: netatalkppa
+
+    - name: Update apt cache
+      apt: update_cache=yes
+      when: netatalkppa.changed
+
+    - name: Install packages
+      apt: name={{ item }} state=latest
+      with_items:
+        - apticron
+        - netatalk
+        - avahi-daemon
+        - sysstat
+        - nfs-kernel-server
+
+    - name: Create users
+      user: >
+        name={{ item['username'] }}
+        comment={{ item['comment'] }}
+        createhome={{ item['createhome'] }}
+        password={{ item['password'] }}
+      with_items: "{{ users }}"
+
+    - name: Create filesystems
+      zfs: name=netstore/{{ item['name'] }} state=present quota={{ item['quota'] }}
+      with_items: "{{ filesystems }}"
+
+    - name: Set filesystem ownership
+      file: path=/netstore/{{ item['name'] }} owner={{ item['owner'] }} group={{ item['owner'] }}
+      with_items: "{{ filesystems }}"
+
+    - name: Update netatalk configuration
+      template: src=afp.conf.j2 dest=/etc/netatalk/afp.conf owner=root group=root mode=0644
+      register: afpconf
+
+    - name: Ensure netatalk is enabled and started
+      service: name=netatalk enabled=yes state=started
+
+    # XXX need to send SIGHUP to parent for graceful restart, if that keeps children alive
+    - name: Restart netatalk
+      service: name=netatalk state=restarted
+      when: afpconf.changed
+
+    - name: Update NFS configuration
+      template: src=exports.j2 dest=/etc/exports owner=root group=root mode=0644
+      register: exportsfile
+
+    - name: Ensure NFS server is enabled and running
+      service: name=nfs-kernel-server enabled=yes state=started
+
+    - name: Restart NFS server
+      service: name=nfs-kernel-server state=restarted
+      when: exportsfile.changed

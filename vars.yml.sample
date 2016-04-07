@@ -1,0 +1,31 @@
+---
+users:
+  - username: smith
+    comment: 'Joe Smith'
+    createhome: yes
+    password: '(from mkpasswd --method=SHA-512)'
+    uid: 1005
+
+  - username: taylor
+    comment: 'Robert Taylor'
+    createhome: no
+    password: '(from mkpasswd --method=SHA-512)'
+    uid: 1002
+
+filesystems:
+  - name: smith
+    quota: 1000G
+    owner: smith
+    nfs: yes
+    nfs_clients: 192.168.1.0/24
+
+  - name: smith-timemachine
+    quota: 500G
+    owner: smith
+    time_machine: yes
+
+  - name: taylor
+    quota: 350G
+    owner: taylor
+    nfs: yes
+    nfs_clients: 192.168.1.0/24

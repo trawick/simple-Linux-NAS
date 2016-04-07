@@ -1,0 +1,2 @@
+{% for fs in filesystems %}{% if 'nfs' in fs and fs.nfs %}/netstore/{{ fs.name }} {{ fs.nfs_clients }}(rw,sync,no_root_squash)
+{% endif %}{% endfor %}

@@ -1,0 +1,14 @@
+[Global]
+
+hostname = netstore
+zeroconf = yes
+guest account = nobody
+log level = default:warn
+log file = /var/log/afpd.log
+
+{% for fs in filesystems %}{% if 'time_machine' in fs and fs.time_machine %}[{{ fs.name }}]
+path = /netstore/{{ fs.name }}
+valid users = {{ fs.owner }}
+time machine = yes
+
+{% endif %}{% endfor %}
