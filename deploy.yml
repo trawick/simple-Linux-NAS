@@ -29,6 +29,22 @@
         - sysstat
         - nfs-kernel-server
 
+    - name: Enable security updates
+      copy: >
+          src=apply-security-updates/apt-security-updates-weekly
+          dest=/etc/cron.weekly/apt-security-updates
+          owner=root
+          group=root
+          mode=0744
+
+    - name: Rotate security updates log file
+      copy: >
+          src=apply-security-updates/apt-security-updates-logrotate
+          dest=/etc/logrotate.d/apt-security-updates
+          owner=root
+          group=root
+          mode=0644
+
     - name: Create users
       user: >
         name={{ item['username'] }}

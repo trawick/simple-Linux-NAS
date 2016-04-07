@@ -49,12 +49,13 @@ Todos
 
 Here are my priorities for upcoming changes:
 
-1. Automatic install of Ubuntu updates, with reboot when appropriate
+1. Support CIFS shares
 2. ZFS snapshot utility
+
    A user should be able to run a command to remotely create a snapshot of
    their remote filesystem.
-3. CIFS shares
-4. Remote backup of the NAS
+3. Off-site backup of the NAS
+4. Somehow handle the need to reboot after some Ubuntu updates
 5. Scheduled ZFS snapshots, with schedule tied to a specific filesystem
 
 Setting up a real machine for your NAS
