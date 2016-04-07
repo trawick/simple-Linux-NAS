@@ -1,15 +1,30 @@
 Simple (cheap?) Linux NAS
 =========================
 
-I use this project for my home NAS currently after initially considering
-purchasing of an appliance-like solution.  The NAS can be any reliable box
-which supports Ubuntu 15.10 and ZFS and has at least one available disk. 
-(64-bit is essentially required for ZFS; I use an older Thinkpad with 4GB
-of memory, a Core 2 Duo CPU, and an external drive unit.)
+I use this project to manage my home NAS, which is utilized for a number
+of Time Machine and other backups as well as a single filesystem for occasional
+use.
+
+The NAS hardware can be any reliable box which supports Ubuntu 15.10 Server
+and ZFS and has at least one available disk.  The box will be dedicated to
+NAS and reinstalled from scratch as part of setup.  A 64-bit CPU and at least
+4GB of RAM is required, as those are the recommendations for ZFS.
 
 The code in this project remotely manages the set of users and exported
 filesystems on the NAS.  It also supports a Vagrant box NAS for testing
 end-user configuration and modifications to the project.
+
+My current NAS hardware is an older Thinkpad with 4GB of memory, a
+Core 2 Duo CPU, and a 4TB external drive unit attached via USB 2.0.  The limiting
+performance factor for most client machines in my environment is the wireless
+network, as only a few machines (including the NAS) have Ethernet.  When
+seeding two initial Time Machine backups simultaneously, one over Ethernet and one over
+wireless, disk I/O on the NAS approached the limitation of USB 2.0, reaching
+15MB/second occasionally.  At the same time, the two Netatalk processes
+handling the two clients reached 20% CPU each.  But this is a rare activity.
+Thus, I expect that a NAS hardware upgrade would be appropriate for performance
+only if I had client machines on Ethernet using filesystems on the NAS for
+normal operation.
 
 Limitations
 -----------
@@ -92,6 +107,9 @@ Testing your configuration with Vagrant
 ---------------------------------------
 
 Create separate configuration files `vagrant_hosts` and `vagrant_vars.yml`
-for the Vagrant box configuration.
+for the Vagrant box configuration.  Vagrant and Virtualbox must be installed.
+Check the `config.vm.network` lines in `Vagrantfile` to see if those settings
+will collide with any existing Vagrant boxes you are using; fix as necessary.
 
-Run `vagrant up` then `./deploy.sh vagrant` to create and configure.
+Run `vagrant up` then `./deploy.sh vagrant` to create and configure, and then
+`vagrant halt` to stop and `vagrant destroy` to delete the VM.
