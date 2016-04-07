@@ -127,5 +127,6 @@ for the Vagrant box configuration.  Vagrant and Virtualbox must be installed.
 Check the `config.vm.network` lines in `Vagrantfile` to see if those settings
 will collide with any existing Vagrant boxes you are using; fix as necessary.
 
-Run `vagrant up` then `./deploy.sh vagrant` to create and configure; use
+Run `vagrant up` then `./deploy.sh vagrant` to create and configure the
+virtual NAS box and `./deploy.sh vagrant` to configure it; use
 `vagrant halt` to stop and `vagrant destroy` to delete the VM.
