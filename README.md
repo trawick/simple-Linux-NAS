@@ -77,7 +77,7 @@ Give password-less `sudo` access to the initial user created during the
 Ubuntu install.
 
 Install this software manually to enable ZFS and allow Ansible to configure
-the machine remotely::
+the machine remotely:
 
     apt-get install python-minimal zfsutils-linux
 
