@@ -1,7 +1,7 @@
 deploy.retry
-hosts
-vagrant_hosts
-vars.yml
-vagrant_vars.yml
+servers/production/configuration.yml
+servers/production/hosts
+servers/vagrant/configuration.yml
+servers/vagrant/hosts
 .vagrant/
 sdb.vdi

@@ -28,10 +28,11 @@
         - avahi-daemon
         - sysstat
         - nfs-kernel-server
+        - samba
 
     - name: Enable security updates
       copy: >
-          src=apply-security-updates/apt-security-updates-weekly
+          src=templates/apt-security-updates-weekly
           dest=/etc/cron.weekly/apt-security-updates
           owner=root
           group=root
@@ -39,7 +40,7 @@
 
     - name: Rotate security updates log file
       copy: >
-          src=apply-security-updates/apt-security-updates-logrotate
+          src=templates/apt-security-updates-logrotate
           dest=/etc/logrotate.d/apt-security-updates
           owner=root
           group=root
@@ -62,7 +63,7 @@
       with_items: "{{ filesystems }}"
 
     - name: Update netatalk configuration
-      template: src=afp.conf.j2 dest=/etc/netatalk/afp.conf owner=root group=root mode=0644
+      template: src=templates/afp.conf.j2 dest=/etc/netatalk/afp.conf owner=root group=root mode=0644
       register: afpconf
 
     - name: Ensure netatalk is enabled and started
@@ -74,7 +75,7 @@
       when: afpconf.changed
 
     - name: Update NFS configuration
-      template: src=exports.j2 dest=/etc/exports owner=root group=root mode=0644
+      template: src=templates/exports.j2 dest=/etc/exports owner=root group=root mode=0644
       register: exportsfile
 
     - name: Ensure NFS server is enabled and running
@@ -83,3 +84,14 @@
     - name: Restart NFS server
       service: name=nfs-kernel-server state=restarted
       when: exportsfile.changed
+
+    - name: Update Samba configuration
+      template: src=templates/smb.conf.j2 dest=/etc/samba/smb.conf owner=root group=root mode=0644
+      register: smbconffile
+
+    - name: Ensure Samba is enabled and running
+      service: name=smbd enabled=yes state=started
+
+    - name: Restart Samba
+      service: name=smbd state=restarted
+      when: smbconffile.changed

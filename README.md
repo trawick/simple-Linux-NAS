@@ -37,26 +37,23 @@ Limitations
 -----------
 
 Currently you can configure filesystems to be exported as Time Machine volumes
-or NFS shares.  CIFS is an obvious alternative, but it is not currently
-supported.
+or NFS shares or CIFS shares.
 
 Creation of the ZFS pool, and thus the choice of RAID and other important
 characteristics, is not automated or even well-documented here.  (That may
 be a feature.)
+
+Only basic configuration is supported for users and filesystems.
 
 Todos
 -----
 
 Here are my priorities for upcoming changes:
 
-1. Support CIFS shares
-2. ZFS snapshot utility
-
-   A user should be able to run a command to remotely create a snapshot of
-   their remote filesystem.
-3. Off-site backup of the NAS
-4. Somehow handle the need to reboot after some Ubuntu updates
-5. Scheduled ZFS snapshots, with schedule tied to a specific filesystem
+1. Off-site backup of the NAS
+2. Somehow handle the need to reboot after some Ubuntu updates
+3. Scheduled ZFS snapshots, with schedule tied to a specific filesystem
+4. Move to Ubuntu 16.04 LTS once that is released.
 
 Setting up a real machine for your NAS
 --------------------------------------
@@ -100,33 +97,43 @@ Defining resources on your NAS
 ------------------------------
 
 After initial setup, the NAS is managed via Ansible, with configuration stored
-in files `hosts` and `vars.yml`.
+in files `hosts` and `configuration.yml`, stored in a server-specific directory
+under `servers`.  The samples assume that you will have a server referred to
+as `production`.
 
 `hosts` stores the IP address or hostname for the NAS as well as the name of
 the user id on the NAS with `sudo` access which will be used for Ansible
-operations.  See `hosts.sample` for an example.
+operations.  See `servers/production/hosts.sample` for an example.
 
-`vars.yml` maintains the set of users which should be defined on the NAS and
-the list of filesystems.  Currently you can configure filesystems to be
-exported as Time Machine volumes or NFS shares.  See `vars.yml.sample` for
-an example.
+`configuration.yml` maintains the set of users which should be defined on the
+NAS and the list of filesystems.  Currently you can configure filesystems to be
+exported as Time Machine volumes or NFS shares.  See 
+`servers/production/configuration.yml.sample` for an example.
+
+You'll need to use `smbpasswd` on the NAS box to set the password for users who
+who own CIFS shares.
 
 Deploying your configuration to the NAS
 ---------------------------------------
 
-Run `./deploy.sh production` to configure or reconfigure your NAS.
+Run `./deploy.sh servername` to configure or reconfigure your NAS.  `servername`
+is the name of a directory under `servers` which has the required configuration
+files.
 
-This uses Ansible 2.0.  I recommend creating a virtualenv using the supplied
+Deployment uses Ansible 2.0.  I recommend creating a virtualenv using the supplied
 requirements.txt file.  (Per Ansible requirements, this virtualenv must use 
 Python 2.7.)  Activate the virtualenv before running `deploy.sh`.
 
 Testing your configuration with Vagrant
 ---------------------------------------
 
-Create separate configuration files `vagrant_hosts` and `vagrant_vars.yml`
-for the Vagrant box configuration.  Vagrant and Virtualbox must be installed.
-Check the `config.vm.network` lines in `Vagrantfile` to see if those settings
-will collide with any existing Vagrant boxes you are using; fix as necessary.
+Vagrant and Virtualbox must be installed.  Check the `config.vm.network` lines
+in `Vagrantfile` to see if those settings will collide with any existing Vagrant
+boxes you are using; fix as necessary.
+
+Create configuration files in the directory `servers/vagrant`.  You may want
+to use symlinks to share configuration files between production and Vagrant
+configurations.
 
 Run `vagrant up` then `./deploy.sh vagrant` to create and configure the
 virtual NAS box and `./deploy.sh vagrant` to configure it; use

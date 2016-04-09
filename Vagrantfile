@@ -6,19 +6,21 @@ Vagrant.configure(2) do |config|
   config.vm.provider "virtualbox" do |vb|
     vb.gui = false
     vb.memory = "4096"
-    file_to_disk = File.realpath('.') + '/sdb.vdi'
-    vb.customize [
-        'createhd',
-        '--filename', file_to_disk,
-        '--format', 'VDI',
-        '--size', 10 * 1024
-    ]
+    nas_sdb_disk_file = File.realpath('.') + '/sdb.vdi'
+    unless File.exist?(nas_sdb_disk_file)
+        vb.customize [
+            'createhd',
+            '--filename', nas_sdb_disk_file,
+            '--format', 'VDI',
+            '--size', 10 * 1024
+        ]
+    end
     vb.customize [
         'storageattach', :id,
         '--storagectl', 'SATAController',
         '--port', 1, '--device', 0,
         '--type', 'hdd', '--medium',
-        file_to_disk
+        nas_sdb_disk_file
     ]
   end
   config.vm.provision "shell", path: "provision-vagrant.sh"
