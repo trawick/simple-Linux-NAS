@@ -16,7 +16,7 @@ if ! type ansible-playbook >/dev/null 2>&1; then
     exit 1
 fi
 
-if test $# -ne 1; then
+if test $# -lt 1; then
     usage_and_exit
 fi
 
@@ -40,6 +40,6 @@ else
     EXTRA=""
 fi
 
-if ! ansible-playbook ${EXTRA} -i ${HOSTSFILE} -e "@${VARFILE}" deploy.yml; then
+if ! ansible-playbook ${EXTRA} -i ${HOSTSFILE} -e "@${VARFILE}" "$@" deploy.yml; then
     exit 1
 fi
