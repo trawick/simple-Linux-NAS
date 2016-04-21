@@ -17,6 +17,8 @@ Vagrant.configure(2) do |config|
     end
     vb.customize [
         'storageattach', :id,
+        # To list storage controller names for a VM, run
+        #  $ vboxmanage showvminfo <uuid>
         '--storagectl', 'SATAController',
         '--port', 1, '--device', 0,
         '--type', 'hdd', '--medium',
