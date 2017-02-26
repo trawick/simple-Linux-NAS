@@ -36,7 +36,7 @@
           dest=/etc/cron.weekly/apt-security-updates
           owner=root
           group=root
-          mode=0744
+          mode=0755
 
     - name: Rotate security updates log file
       copy: >
