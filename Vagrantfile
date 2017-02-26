@@ -1,5 +1,5 @@
 Vagrant.configure(2) do |config|
-  config.vm.box = "larryli/wily64"
+  config.vm.box = "bento/ubuntu-16.04"
   config.vm.network "forwarded_port", guest: 22, host: 2231
   config.vm.network "private_network", ip: "10.10.10.22"
   config.vm.synced_folder(".", nil, :disabled => true, :id => "vagrant-root")
@@ -19,7 +19,7 @@ Vagrant.configure(2) do |config|
         'storageattach', :id,
         # To list storage controller names for a VM, run
         #  $ vboxmanage showvminfo <uuid>
-        '--storagectl', 'SATAController',
+        '--storagectl', 'SATA Controller',
         '--port', 1, '--device', 0,
         '--type', 'hdd', '--medium',
         nas_sdb_disk_file

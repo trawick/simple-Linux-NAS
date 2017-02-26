@@ -5,7 +5,7 @@ I use this project to manage my home NAS, which is utilized for a handful of
 Time Machine and other backups as well as another filesystem for non-backup
 use.
 
-The NAS hardware can be any reliable box which supports Ubuntu 15.10 Server
+The NAS hardware can be any reliable box which supports Ubuntu 16.04 Server
 and ZFS and has at least one available disk.  The box will be dedicated to
 NAS and reinstalled from scratch as part of setup.  A 64-bit CPU and at least
 4GB of RAM is required, as those are the recommendations for ZFS.
@@ -51,14 +51,15 @@ Todos
 Here are my priorities for upcoming changes:
 
 1. Off-site backup of the NAS
-2. Somehow handle the need to reboot after some Ubuntu updates
-3. Scheduled ZFS snapshots, with schedule tied to a specific filesystem
-4. Move to Ubuntu 16.04 LTS once that is released.
+1. Verify that security fixes are automatically installed; somehow handle the
+   reboot requirement
+1. Time Machine backups: Axe AFP in favor of SMB, enable Bonjour
+1. Scheduled ZFS snapshots, with schedule tied to a specific filesystem
 
 Setting up a real machine for your NAS
 --------------------------------------
 
-Choose a machine and install Ubuntu 15.10 Server on it.  Leave at least one
+Choose a machine and install Ubuntu 16.04 Server on it.  Leave at least one
 physical disk untouched.  (You won't mix the OS and the shared storage on 
 the same disk.)
 

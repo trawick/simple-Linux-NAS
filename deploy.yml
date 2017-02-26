@@ -12,8 +12,11 @@
     - name: Make sure python-software-properties is installed
       apt: pkg=python-software-properties state=latest
 
+    - name: Remove old Netatalk repo
+      apt_repository: state=absent repo='ppa:gercod/netatalk'
+
     - name: Add ppa repo for recent Netatalk
-      apt_repository: repo='ppa:gercod/netatalk'
+      apt_repository: repo='ppa:juliank/netatalk3'
       register: netatalkppa
 
     - name: Update apt cache
